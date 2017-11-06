@@ -2,8 +2,11 @@ const app = require('express')();
 const mongoose = require('mongoose');
 const uri = require('./mongoconfig');
 const Todo = require('./models/todo');
+const cors = require('cors');
 
 mongoose.connect(uri, { useMongoClient: true });
+
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('please use /api/data');
