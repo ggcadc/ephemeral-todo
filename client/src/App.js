@@ -9,6 +9,7 @@ class App extends Component {
     this.getData = this.getData.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.state = {
+      loading: true,
       input: "",
       uri: 'http://localhost:3001/api',
       todos: [],
@@ -27,6 +28,7 @@ class App extends Component {
       // sets the state to the data value
       this.setState({
         todos: data.data,
+        loading:false
       });
     });
   }
@@ -39,11 +41,7 @@ class App extends Component {
     axios.get(`${this.state.uri}/post/${text}`)
       .then(data => console.log(data))
       .then(() => this.getData())
-  }
-  updateItem(text, id) {
-    axios.get(`${this.state.uri}/update/${id}/${text}`)
-      .then(data => console.log(data))
-      .then(() => this.getData())
+      .then(() => this.setState({ input: "" }))
   }
   handleInput(evt) {
     this.setState({
@@ -60,8 +58,8 @@ class App extends Component {
   )
   InputTodo = () => (
     <div className="inputBox">
-      Todo:<input type="text" onChange={(e) => this.handleInput(e)} />
-      <input type="submit" onClick={() => this.postItem(this.state.input)}/>
+      <input type="text" onChange={(e) => this.handleInput(e)} value={this.state.input} />
+      <input type="submit" onClick={() => this.postItem(this.state.input)} value="ToDo" />
     </div>
   )
   render() {
@@ -69,7 +67,7 @@ class App extends Component {
       <Router>
         <div>
           <this.InputTodo />
-          <this.TodoList />
+          {this.state.loading?<div className="loader">Loading...</div>:<this.TodoList />}
         </div>
       </Router>
     );
