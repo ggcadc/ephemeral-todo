@@ -12,22 +12,18 @@ class App extends Component {
     this.state = {
       session: "",
       input: "",
-      uri: 'http://localhost:3001/api',
+      uri: 'SERVER_URI',
       todos: [],
     };
   }
   componentDidMount() {
     // this makes the initial fetch when the component mounts
-    const session = randomWords();
+    const session = window.location.pathname === '/' ? randomWords() : window.location.pathname.slice(1);
+    
     this.setState({
       session
-    })
-    window.addEventListener('beforeunload', this.todosCleanup);
-  }
-  todosCleanup() {
-    this.state.todos.map((item) => [
-      this.deleteItem(item._id)
-    ])
+    }, () => this.getData())
+    
   }
   // uses axios to make a simple fetch
   getData() {
@@ -43,12 +39,10 @@ class App extends Component {
   }
   deleteItem(id) {
     axios.get(`${this.state.uri}/delete/${id}`)
-      .then(data => console.log(data))
       .then(() => this.getData())
   }
   postItem(text) {
     axios.get(`${this.state.uri}/post/${text}/${this.state.session}`)
-      .then(data => console.log(data))
       .then(() => this.getData())
       .then(() => this.setState({ input: "" }))
   }
