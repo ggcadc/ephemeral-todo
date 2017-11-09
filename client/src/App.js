@@ -1,29 +1,23 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Redirect, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
-import randomWords from 'random-words';
 import './app.css'
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.getData = this.getData.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+    
     this.state = {
-      session: "",
-      input: "",
-      uri: 'SERVER_URI',
+      session: props.session,
+      input: '',
+      uri: 'https://ehpem-todo-server-xqxkweaewf.now.sh/api',
       todos: [],
     };
   }
   componentDidMount() {
     // this makes the initial fetch when the component mounts
-    const session = window.location.pathname === '/' ? randomWords() : window.location.pathname.slice(1);
-    
-    this.setState({
-      session
-    }, () => this.getData())
-    
+    this.getData()
   }
   // uses axios to make a simple fetch
   getData() {
@@ -74,22 +68,14 @@ class App extends Component {
       />
     </div>
   )
-  TodoWrapper = () => (
-    <div className="flex">
+  render() {
+    return (
+      <div className="flex">
         <div className="input">
           <this.InputTodo />
         </div>
       {this.state.todos.length > 0 ? <this.TodoList /> : <ul><li>Add Something</li></ul>}
     </div> 
-  )
-  render() {
-    return (
-      <Router>
-        <Switch>
-          <Route exact path="/" render={() => (<Redirect to={this.state.session} />)} />
-          <Route path='/*' component={this.TodoWrapper} />
-        </Switch>
-      </Router>
     );
   }
 }
