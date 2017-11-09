@@ -9,7 +9,10 @@ const Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  session: {
+    type: String,
+    required: true,
+  },
 });
 
-const Todo = module.exports = mongoose.model('todo', Schema)
-;
+const Todo = module.exports = mongoose.model('todo', Schema);

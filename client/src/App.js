@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
+import randomWords from 'random-words';
 import './app.css'
 
 class App extends Component {
@@ -9,7 +10,7 @@ class App extends Component {
     this.getData = this.getData.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.state = {
-      loading: true,
+      session: "",
       input: "",
       uri: 'http://localhost:3001/api',
       todos: [],
@@ -17,18 +18,26 @@ class App extends Component {
   }
   componentDidMount() {
     // this makes the initial fetch when the component mounts
-    this.getData();
+    const session = randomWords();
+    this.setState({
+      session
+    })
+    window.addEventListener('beforeunload', this.todosCleanup);
+  }
+  todosCleanup() {
+    this.state.todos.map((item) => [
+      this.deleteItem(item._id)
+    ])
   }
   // uses axios to make a simple fetch
   getData() {
-    axios.get(`${this.state.uri}/data`).then((data, err) => {
+    axios.get(`${this.state.uri}/data/${this.state.session}/`).then((data, err) => {
       if (err)console.log(err);
       return data;
     }).then((data) => {
       // sets the state to the data value
       this.setState({
         todos: data.data,
-        loading:false
       });
     });
   }
@@ -38,7 +47,7 @@ class App extends Component {
       .then(() => this.getData())
   }
   postItem(text) {
-    axios.get(`${this.state.uri}/post/${text}`)
+    axios.get(`${this.state.uri}/post/${text}/${this.state.session}`)
       .then(data => console.log(data))
       .then(() => this.getData())
       .then(() => this.setState({ input: "" }))
@@ -57,18 +66,35 @@ class App extends Component {
     </ul>
   )
   InputTodo = () => (
-    <div className="inputBox">
-      <input type="text" onChange={(e) => this.handleInput(e)} value={this.state.input} />
-      <input type="submit" onClick={() => this.postItem(this.state.input)} value="ToDo" />
+    <div>
+      <input 
+        type="submit" 
+        onClick={() => this.postItem(this.state.input)} 
+        value="ToDo"
+      />
+      <input 
+        type="text" 
+        onChange={(e) => this.handleInput(e)} 
+        value={this.state.input}
+        onKeyPress={(event) => event.key === 'Enter' ? this.postItem(this.state.input) : null}
+      />
     </div>
+  )
+  TodoWrapper = () => (
+    <div className="flex">
+        <div className="input">
+          <this.InputTodo />
+        </div>
+      {this.state.todos.length > 0 ? <this.TodoList /> : <ul><li>Add Something</li></ul>}
+    </div> 
   )
   render() {
     return (
       <Router>
-        <div>
-          <this.InputTodo />
-          {this.state.loading?<div className="loader">Loading...</div>:<this.TodoList />}
-        </div>
+        <Switch>
+          <Route exact path="/" render={() => (<Redirect to={this.state.session} />)} />
+          <Route path='/*' component={this.TodoWrapper} />
+        </Switch>
       </Router>
     );
   }
