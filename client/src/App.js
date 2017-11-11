@@ -19,7 +19,6 @@ class App extends Component {
     // this makes the initial fetch when the component mounts
     this.getData()
   }
-  // uses axios to make a simple fetch
   getData() {
     axios.get(`${this.state.uri}/data/${this.state.session}/`).then((data, err) => {
       if (err)console.log(err);
@@ -36,14 +35,18 @@ class App extends Component {
       .then(() => this.getData())
   }
   postItem(text) {
+    // light sanatizing to remove error causing characters
+    if(text.match(new RegExp(/[-/\\^%$*+?#.()|[\]{}]/g))){
+      text = text.replace(new RegExp(/[-/\\^%$*+?#.()|[\]{}]/g), '');
+    }
     axios.get(`${this.state.uri}/post/${text}/${this.state.session}`)
       .then(() => this.getData())
-      .then(() => this.setState({ input: "" }))
+      .then(() => this.input.value = '')
   }
-  handleInput(evt) {
+  handleSubmit() {
     this.setState({
-      input: evt.target.value
-    })
+      input: this.input.value
+    }, () => this.postItem(this.state.input))
   }
   TodoList = () => (
     <ul>
@@ -57,14 +60,13 @@ class App extends Component {
     <div>
       <input 
         type="submit" 
-        onClick={() => this.postItem(this.state.input)} 
+        onClick={() => this.handleSubmit()} 
         value="ToDo"
       />
       <input 
         type="text" 
-        onChange={(e) => this.handleInput(e)} 
-        value={this.state.input}
-        onKeyPress={(event) => event.key === 'Enter' ? this.postItem(this.state.input) : null}
+        ref={(input) => this.input = input}
+        onKeyPress={(event) => event.key === 'Enter' ? this.handleSubmit(event) : null}
       />
     </div>
   )

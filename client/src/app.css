@@ -1,25 +1,21 @@
 body {
-  display: flex;
   background-color: rgb(191, 213, 231);
   font-family: Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;
-  justify-content: space-around;
-  width: 100vw;
-  height: 100vh;
-  font-size: 110%;
 }
 .flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-content: center;
-  align-items: center;
-  min-width: 50vw;
-}
-.input {
-  display: flex;
-  max-width: 70vw;
-  min-width: 35vw;
-  justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100vw;
 }
 button {
   margin: 3px;
@@ -30,21 +26,39 @@ button {
   background-color: rgb(185, 169, 253);
   border-radius: 3px;
   border: none;
+  -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }
 button:hover {
   background-color: rgb(241, 193, 253);
+  -webkit-box-shadow: 3px 5px 30px slategrey;
+          box-shadow: 3px 5px 30px slategrey
 }
 ul {
   list-style-type: none;
-  max-width: 70vw;
-  min-width: 35vw;
+  margin-left: -30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  width: 100vw;
 }
 li {
   font-variant: small-caps;
   font-size: 1.2em;
-  margin: 5px;
+  margin-top: 5px;
   padding: 15px;
+  width: 70vw;
+  border-radius: 6px;
 }
 li:nth-child(odd) { 
   background: rgb(225, 249, 255); 
@@ -52,18 +66,21 @@ li:nth-child(odd) {
 input[type=text] {
   padding: 5px;
   height: 40px;
-  max-width: 70vw;
-  min-width: 35vw;
-  box-sizing: border-box;
+  border-radius: 0px 6px 6px 0px;
+  border: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   font-variant: small-caps;
   font-size: 1.2em;
+  width: 65vw;
 }
 input[type=submit] {
   height: 40px;
-  width: 80px;
+  width: 70px;
   background-color: rgb(185, 169, 253);
-  border-radius: 3px 0px 0px 3px;
+  border-radius: 6px 0px 0px 6px;
   border: none;
+  -webkit-transition: all 0.2s;
   transition: all 0.2s;
   font-size: 1.1em;
 }
