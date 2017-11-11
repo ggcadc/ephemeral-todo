@@ -28,6 +28,7 @@ button {
   border: none;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
+  -webkit-appearance: none;
 }
 button:hover {
   background-color: rgb(241, 193, 253);
@@ -83,6 +84,7 @@ input[type=submit] {
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
   font-size: 1.1em;
+  -webkit-appearance: none;  
 }
 input[type=submit]:hover {
   background-color: rgb(241, 193, 253);
